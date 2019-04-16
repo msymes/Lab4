@@ -2,6 +2,8 @@ package pkgGame;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -420,7 +422,7 @@ public class Sudoku extends LatinSquare {
 	private HashSet<Integer> getAllValidCellValues(int iCol, int iRow){
 		HashSet<Integer> valid = new HashSet<Integer>();
 		for (int i = 1; i < iSize +1; i++) {
-			if (isValidValue(iCol,iRow,i) == true) {
+			if (isValidValue(iRow,iCol,i) == true) {
 				valid.add(i);
 			}
 			
@@ -429,7 +431,10 @@ public class Sudoku extends LatinSquare {
 	}
 	
 	public boolean isValidValue(Sudoku.Cell c, int iValue) {
-		return false;
+		int iCol = c.getiCol();
+		int iRow = c.getiRow();
+		
+		return isValidValue(iRow,iCol,iValue);
 	}
 	
 	private void SetCells() {
@@ -462,6 +467,7 @@ public class Sudoku extends LatinSquare {
 			return lstValidValues;
 		}
 
+		/*Why does this take a hashset argument when the attribute is an array list???*/
 		public void setlstValidValues(HashSet<Integer> hsValidValues) {
 			/*this.lstValidValues = hsValidValues;*/
 		}
@@ -500,7 +506,9 @@ public class Sudoku extends LatinSquare {
 		}
 		
 		public void ShuffleValidValues() {
-			
+			ArrayList<Integer> validValues = this.getLstValidValues();
+			Collections.shuffle(Arrays.asList(validValues));
+			this.setlstValidValues(validValues);
 		}
 		
 	}
