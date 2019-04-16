@@ -418,7 +418,14 @@ public class Sudoku extends LatinSquare {
 	}
 	
 	private HashSet<Integer> getAllValidCellValues(int iCol, int iRow){
-		return null;
+		HashSet<Integer> valid = new HashSet<Integer>();
+		for (int i = 1; i < iSize +1; i++) {
+			if (isValidValue(iCol,iRow,i) == true) {
+				valid.add(i);
+			}
+			
+		}
+		return valid;
 	}
 	
 	public boolean isValidValue(Sudoku.Cell c, int iValue) {
@@ -439,7 +446,8 @@ public class Sudoku extends LatinSquare {
 		private ArrayList<Integer> lstValidValues;
 		
 		public Cell(int iRow, int iCol) {
-			
+			this.iRow = iRow;
+			this.iCol = iCol;
 		}
 		
 		public int getiRow() {
@@ -454,20 +462,41 @@ public class Sudoku extends LatinSquare {
 			return lstValidValues;
 		}
 
+		public void setlstValidValues(HashSet<Integer> hsValidValues) {
+			/*this.lstValidValues = hsValidValues;*/
+		}
+		
+		@Override
 		public boolean equals(Object o) {
 			return false;
 		}
 		
 		public Sudoku.Cell GetNextCell(Sudoku.Cell c){
-			return null;
+			int iRow = c.getiRow();
+			int iCol = c.getiCol();
+			int iRowNext;
+			int iColNext;
+			Sudoku.Cell nextCell ;
+			
+			if ((iRow == iSize-1) && (iCol == iSize - 1)) {
+				return null;
+			}
+			else if (iRow == iSize - 1){
+				iColNext = iCol + 1;
+				iRowNext = 0;
+			}
+			else {
+				iColNext = iCol;
+				iRowNext = iRow + 1;
+			}
+			
+			nextCell = new Cell(iRowNext,iColNext);
+			return nextCell;
 		}
 		
+		@Override
 		public int hashCode() {
 			return 0;
-		}
-		
-		public void setlstValidValues(HashSet<Integer> hsValidValues) {
-			
 		}
 		
 		public void ShuffleValidValues() {
