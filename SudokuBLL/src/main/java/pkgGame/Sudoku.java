@@ -4,7 +4,9 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Random;
 
 import pkgHelper.LatinSquare;
@@ -52,6 +54,9 @@ public class Sudoku extends LatinSquare {
 	 * @throws Exception
 	 *             if the iSize given doesn't have a whole number square root
 	 */
+	
+	private HashMap<Integer, Sudoku.Cell> cells = new HashMap<Integer, Sudoku.Cell>();  
+	
 	public Sudoku(int iSize) throws Exception {
 
 		this.iSize = iSize;
@@ -66,6 +71,8 @@ public class Sudoku extends LatinSquare {
 		int[][] puzzle = new int[iSize][iSize];
 		super.setLatinSquare(puzzle);
 		FillDiagonalRegions();
+		SetCells();
+		fillRemaining();
 	}
 
 	/**
@@ -416,6 +423,7 @@ public class Sudoku extends LatinSquare {
 	}
 	
 	private boolean fillRemaining(Sudoku.Cell c) {
+		
 		return false;
 	}
 	
@@ -425,7 +433,6 @@ public class Sudoku extends LatinSquare {
 			if (isValidValue(iRow,iCol,i) == true) {
 				valid.add(i);
 			}
-			
 		}
 		return valid;
 	}
@@ -438,7 +445,14 @@ public class Sudoku extends LatinSquare {
 	}
 	
 	private void SetCells() {
-		
+		for (int iCol = 0; iCol < iSize; iCol++) {
+			for (int iRow = 0; iRow < iSize; iRow++) {
+				Cell c = new Cell(iRow,iCol);
+				c.setlstValidValues(getAllValidCellValues(iCol,iRow));
+				c.ShuffleValidValues();
+				cells.put(c.hashCode(), c);
+			}
+		}
 	}
 	
 	private void ShowAvailableValues() {
@@ -467,13 +481,18 @@ public class Sudoku extends LatinSquare {
 			return lstValidValues;
 		}
 
-		/*Why does this take a hashset argument when the attribute is an array list???*/
 		public void setlstValidValues(HashSet<Integer> hsValidValues) {
-			/*this.lstValidValues = hsValidValues;*/
+			ArrayList<Integer> list = new ArrayList<Integer>(hsValidValues);
+			this.lstValidValues = list;
 		}
 		
 		@Override
 		public boolean equals(Object o) {
+			if (o instanceof Cell) {
+				if(o== this) {
+					return true;
+				}
+			}
 			return false;
 		}
 		
@@ -502,13 +521,11 @@ public class Sudoku extends LatinSquare {
 		
 		@Override
 		public int hashCode() {
-			return 0;
+			return Objects.hash(iRow,iCol);
 		}
 		
 		public void ShuffleValidValues() {
-			ArrayList<Integer> validValues = this.getLstValidValues();
-			Collections.shuffle(Arrays.asList(validValues));
-			this.setlstValidValues(validValues);
+			Collections.shuffle(Arrays.asList(this.lstValidValues));
 		}
 		
 	}
