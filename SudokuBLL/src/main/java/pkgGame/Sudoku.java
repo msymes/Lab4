@@ -423,6 +423,21 @@ public class Sudoku extends LatinSquare {
 	}
 	
 	private boolean fillRemaining(Sudoku.Cell c) {
+		if (c == null) {
+			return true;
+		}
+		else {
+			for (int value : c.getLstValidValues()) {
+				if (isValidValue(c , value) == true) {
+					getPuzzle()[c.getiRow()][c.getiCol()] = value;
+				}
+			}
+		}
+		if ((fillRemaining(c.GetNextCell(c))) == true){
+			return true;
+		}
+		
+		getPuzzle()[c.getiRow()][c.getiCol()] = 0;
 		
 		return false;
 	}
